@@ -1,0 +1,7 @@
+79 get
+GET / HTTP/1.1
+Host: yii
+User-Agent: tank
+Accept: */*
+Connection: Close
+

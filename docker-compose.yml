@@ -1,0 +1,54 @@
+version: '2'
+services:
+  php:
+    build: ./docker/php/
+    container_name: php
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      - ./:/app:delegated
+    ports:
+      - '8000:80'
+    links:
+      - redis
+      - mongo
+      - db
+      - yii_rabbitmq
+
+  yii_rabbitmq:
+    image: rabbitmq:3-management
+    container_name: yii_rabbitmq
+    ports:
+      - '25672:15672'
+#    volumes:
+#      - ./docker/rabbitmq:/var/lib/rabbitmq
+
+  redis:
+    image: redis
+    container_name: redis
+
+  mongo:
+    image: mongo
+    restart: always
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: sws
+#      MONGO_INITDB_ROOT_PASSWORD: passw0rd
+    ports:
+      - '37017:27017'
+    expose:
+      - 37017
+
+  db:
+    image: mariadb
+    restart: always
+    ports:
+      - "13306:3306"
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: passw0rd
+      MYSQL_DATABASE: sws
+      MYSQL_USER: sws
+      MYSQL_PASSWORD: passw0rd
+#    volumes:
+#      - ./../var/db:/var/lib/mysql
+    expose:
+      - 3306
