@@ -2,6 +2,7 @@
 
 namespace app\lib\repository;
 
+use app\lib\entity\builder\UserEntityBuilder;
 use app\lib\entity\UserEntity;
 use app\models\User;
 
@@ -21,7 +22,7 @@ class UserRepository
             ->where(['username' => $username])
             ->one();
         if ($user) {
-            return $this->buildFromModel($user);
+            return UserEntityBuilder::buildFromModel($user);
         }
         return null;
     }
@@ -44,23 +45,9 @@ class UserRepository
             ->where(['id' => $id])
             ->one();
         if ($user) {
-            return $this->buildFromModel($user);
+            return UserEntityBuilder::buildFromModel($user);
         }
         return null;
-    }
-
-    /**
-     * @param User $user
-     * @return UserEntity
-     */
-    private function buildFromModel(User $user): UserEntity
-    {
-        $userEntity = new UserEntity();
-        $userEntity->fromArray($user->toArray());
-        $userEntity->setAuthKey($user->auth_key);
-        $userEntity->setAccessToken($user->access_token);
-
-        return $userEntity;
     }
 
     /**
@@ -73,7 +60,7 @@ class UserRepository
             ->where(['access_token' => $token])
             ->one();
         if ($user) {
-            return $this->buildFromModel($user);
+            return UserEntityBuilder::buildFromModel($user);
         }
         return null;
     }
@@ -93,6 +80,6 @@ class UserRepository
 
         $user->insert();
 
-        return $this->buildFromModel($user);
+        return UserEntityBuilder::buildFromModel($user);
     }
 }

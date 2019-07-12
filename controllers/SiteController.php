@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\lib\form\LoginForm;
 use app\lib\repository\UserRepository;
 use app\lib\service\Auth\AuthService;
 use Yii;
@@ -9,8 +10,6 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
-use app\models\LoginForm;
-use app\models\ContactForm;
 
 class SiteController extends Controller
 {
@@ -57,16 +56,6 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
-     *
-     * @return string
-     */
-    public function actionIndex()
-    {
-        return $this->render('index');
-    }
-
-    /**
      * Login action.
      *
      * @return Response|string
@@ -109,7 +98,9 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        /** @var AuthService $authService */
+        $authService = \Yii::$container->get(AuthService::class);
+        $authService->logout();
 
         return $this->goHome();
     }

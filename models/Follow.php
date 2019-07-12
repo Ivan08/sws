@@ -13,12 +13,6 @@ class Follow extends ActiveRecord
     public const
         SCENARIO_CREATE = 'create';
 
-
-//    public $id;
-//    public $message;
-//    public $user_id;
-//    public $username;
-
     public static function tableName()
     {
         return '{{follow}}';
@@ -33,12 +27,5 @@ class Follow extends ActiveRecord
 
     public static function primaryKey(){
         return ['user_from', 'user_to'];
-    }
-
-    public function relations()
-    {
-        return [
-            'user'=> [self::H, 'Post', 'author_id'],
-        ];
     }
 }

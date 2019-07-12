@@ -14,12 +14,6 @@ class Post extends ActiveRecord
         SCENARIO_CREATE = 'create',
         SCENARIO_UPDATE = 'update';
 
-
-//    public $id;
-//    public $message;
-//    public $user_id;
-//    public $username;
-
     public static function tableName()
     {
         return '{{post}}';

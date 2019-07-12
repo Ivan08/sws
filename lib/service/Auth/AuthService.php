@@ -31,4 +31,12 @@ class AuthService
     {
         return $user->getPassword() === $password;
     }
+
+    /**
+     * @return bool
+     */
+    public function logout(): bool
+    {
+        return \Yii::$app->user->logout();
+    }
 }
