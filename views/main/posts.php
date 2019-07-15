@@ -8,6 +8,7 @@
 use yii\helpers\Url;
 
 $this->title = 'Posts';
+$this->registerJsFile(Yii::getAlias('/js/infBlock.js'), ['depends' => \yii\web\JqueryAsset::class]);
 
 ?>
 <div class="site-index">
@@ -20,10 +21,6 @@ $this->title = 'Posts';
         </li>
     </ul>
 </div>
-
-<?php foreach ($posts as $post): ?>
-    <div class="alert alert-secondary" role="alert">
-        <?= $post->getMessage(); ?>
-        <a href="<?= Url::to(['post/delete', 'id' => $post->getId()]) ?>">delete</a>
-    </div>
-<?php endforeach; ?>
+<div class="infBlock" data-url="<?= Url::to(['posts']) ?>">
+    <?= $this->render('_posts', ['posts' => $posts]); ?>
+</div>

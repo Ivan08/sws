@@ -62,13 +62,15 @@ class PostRepository
     /**
      * @param array $userIds
      * @param int $limit
+     * @param int $offset
      * @return PostEntity[]
      */
-    public function getByUserIds(array $userIds, int $limit): array
+    public function getByUserIds(array $userIds, int $limit, int $offset = 0): array
     {
         $posts = Post::find()
             ->where(['user_id' => $userIds])
             ->limit($limit)
+            ->offset($offset)
             ->orderBy('id')
             ->all();
         $result = [];
@@ -90,7 +92,7 @@ class PostRepository
             ->where(['user_id' => $userId])
             ->limit($limit)
             ->offset($offset)
-            ->orderBy('id')
+            ->orderBy('id DESC')
             ->all();
         $result = [];
         foreach ($posts as $post) {

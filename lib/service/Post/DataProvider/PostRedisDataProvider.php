@@ -10,6 +10,7 @@ use app\lib\common\BaseRedisObject;
  */
 class PostRedisDataProvider extends BaseRedisObject
 {
+    private const TTL = 60;
     /**
      * @param int $userId
      */
@@ -37,7 +38,7 @@ class PostRedisDataProvider extends BaseRedisObject
      */
     public function set(int $userId, array $data): void
     {
-        $this->redis->set($this->getKey($userId), serialize($data));
+        $this->redis->set($this->getKey($userId), serialize($data), self::TTL);
     }
 
     /**

@@ -9,7 +9,6 @@ use app\lib\service\Follow\FollowService;
 use app\lib\service\Post\PostService;
 use Yii;
 use yii\filters\AccessControl;
-use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 /**
@@ -65,6 +64,10 @@ class MainController extends Controller
         $data = [
             'feed' => $feed
         ];
+        if (Yii::$app->request->getIsAjax()) {
+            $this->layout = false;
+            return $this->render('_feedPost', $data);
+        }
 
         return $this->render('feed', $data);
     }
@@ -82,11 +85,17 @@ class MainController extends Controller
             //return exception
             exit;
         }
+        /** @var PostService $postService */
         $postService = \Yii::$container->get(PostService::class);
         $posts = $postService->getPosts($user, $page);
-        return $this->render('posts', [
+        $data = [
             'posts' => $posts
-        ]);
+        ];
+        if (Yii::$app->request->getIsAjax()) {
+            $this->layout = false;
+            return $this->render('_posts', $data);
+        }
+        return $this->render('posts', $data);
     }
 
     /**

@@ -42,7 +42,7 @@ class InitController extends Controller
         $userService = \Yii::$container->get(UserService::class);
         $postService = \Yii::$container->get(PostService::class);
         $followService = \Yii::$container->get(FollowService::class);
-        for ($i = 1; $i < 100; $i++) {
+        for ($i = 1; $i < 1000; $i++) {
             $userData = [
                 'username' => sprintf('User%04d', $i),
                 'password' => 'pass',
@@ -56,7 +56,8 @@ class InitController extends Controller
 
         echo sprintf("Create follow\n");
         foreach ($users as $user) {
-            for ($i = 1; $i < 5; $i++) {
+            echo sprintf("Create follows to %s:%s\n", $user->getUsername(), $user->getId());
+            for ($i = 1; $i < 50; $i++) {
                 do {
                     $userTo = $users[random_int(0, count($users) - 1)];
                 } while ($user->getId() == $userTo->getId());
@@ -66,7 +67,10 @@ class InitController extends Controller
         }
 
         echo sprintf("Create posts\n");
-        for ($j = 0; $j < 2000; $j++) {
+        for ($j = 0; $j < 50000; $j++) {
+            if (!($j % 100)) {
+                echo sprintf("Create %s posts\n", $j);
+            }
             $postData = [
                 'message' => 'Lorem Ipsum - это текст-"рыба", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной "рыбой" для текстов на латинице с начала XVI века.'
             ];

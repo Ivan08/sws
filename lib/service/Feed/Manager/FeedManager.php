@@ -5,13 +5,17 @@ namespace app\lib\service\Feed\Manager;
 use app\lib\entity\PostEntity;
 use app\lib\entity\UserEntity;
 use app\lib\repository\FollowRepository;
-use app\lib\repository\PostRepository;
 use app\lib\service\Feed\DataProvider\FeedMongoDataProvider;
+use app\lib\service\Feed\DataProvider\FeedSqlDataProvider;
 
 class FeedManager
 {
+    private const FEED_MAX_COUNT = 50;
+
     /** @var FeedMongoDataProvider $mongoDataProvider */
     private $mongoDataProvider;
+    /** @var FeedSqlDataProvider $sqlDataProvider */
+    private $sqlDataProvider;
 
     /**
      * FeedManager constructor.
@@ -19,6 +23,7 @@ class FeedManager
     public function __construct()
     {
         $this->mongoDataProvider = \Yii::$container->get(FeedMongoDataProvider::class);
+        $this->sqlDataProvider = \Yii::$container->get(FeedSqlDataProvider::class);
     }
 
     /**
@@ -30,8 +35,12 @@ class FeedManager
     public function getFeed(UserEntity $user, int $offset, int $limit): array
     {
         $posts = [];
-        $data = $this->mongoDataProvider->getFeed($user->getId(), $offset);
-        $data = array_splice($data, $offset, $limit);
+        if ($offset < self::FEED_MAX_COUNT) {
+            $data = $this->mongoDataProvider->getFeed($user->getId(), $offset);
+            $data = array_splice($data, $offset, $limit);
+        } else {
+            $data = $this->sqlDataProvider->getFeedForUser($user->getId(), $limit, $offset);
+        }
         foreach ($data as $value) {
             $posts[] = $this->buildFromArray($value);
         }
@@ -46,13 +55,7 @@ class FeedManager
      */
     public function rebuildFeed(UserEntity $user): void
     {
-        /** @var FollowRepository $followRepository */
-        $followRepository = \Yii::$container->get(FollowRepository::class);
-        /** @var PostRepository $postRepository */
-        $postRepository = \Yii::$container->get(PostRepository::class);
-
-        $userId = $followRepository->getFollowingIds($user->getId());
-        $posts = $postRepository->getByUserIds($userId, 50);
+        $posts = $this->sqlDataProvider->getFeedForUser($user->getId(), self::FEED_MAX_COUNT);
         $data = [];
         foreach ($posts as $post) {
             $data[] = $post->toArray();

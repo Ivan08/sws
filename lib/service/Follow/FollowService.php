@@ -24,7 +24,7 @@ class FollowService
         $manager->subscribe($userFrom, $userTo);
 
         $producer = new RebuildFeedProducer();
-        $producer->publish($userFrom);
+//        $producer->publish($userFrom);
 
         return true;
     }

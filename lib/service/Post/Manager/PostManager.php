@@ -73,7 +73,7 @@ class PostManager
             $posts = $this->redisDataProvider->get($user->getId());
             if ($posts === null) {
                 /** @var PostRepository $postRepository */
-        $postRepository = \Yii::$container->get(PostRepository::class);
+                $postRepository = \Yii::$container->get(PostRepository::class);
                 $posts = $postRepository->getByUserId($user->getId(), self::REDIS_CACHE_POSTS_LIMIT);
                 $this->redisDataProvider->set($user->getId(), $posts);
             }

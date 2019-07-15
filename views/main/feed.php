@@ -4,9 +4,10 @@
  * @var $feed array
  */
 
-$this->title = 'Feed';
-
 use yii\helpers\Url;
+
+$this->title = 'Feed';
+$this->registerJsFile(Yii::getAlias('/js/infBlock.js'), ['depends' => \yii\web\JqueryAsset::class]);
 
 ?>
 <div class="site-index">
@@ -19,9 +20,6 @@ use yii\helpers\Url;
         </li>
     </ul>
 </div>
-<?php foreach ($feed as $post): ?>
-    <div class="alert alert-secondary">
-        <a href="<?= Url::to(['main/user-profile', 'username' => $post->getUsername()]) ?>"><?= $post->getUsername(); ?></a>
-        <?= $post->getMessage(); ?>
-    </div>
-<?php endforeach; ?>
+<div class="infBlock" data-url="<?= Url::to(['feed']) ?>">
+    <?= $this->render('_feedPost', ['feed' => $feed]); ?>
+</div>
